@@ -1,93 +1,133 @@
-💼 AI Resume Builder
-An intelligent, streamlined resume builder that customizes your resume for any LinkedIn job posting using AI. Just input your preferences, and let the app generate a tailored resume using your experience and the job description.
+# 💼 AI Resume Builder
 
-🚀 Features
-🧾 Streamlit Web Interface – Easy-to-use interface to input filters (e.g. job title, location, etc.)
+A smart resume generator that builds customized resumes based on LinkedIn job descriptions and your experience using AI.
 
-🔍 Job Scraper – Automatically fetches job descriptions and URLs from LinkedIn using selected filters
+---
 
-📄 Knowledge Document Input – Accepts a user knowledge document (skills, experiences, etc.)
+## 📌 Overview
 
-🤖 AI Resume Generator – Uses AI to craft a job-specific resume by analyzing both the job description and your experience
+AI Resume Builder allows you to:
 
-💾 Downloadable Resume – Saves the AI-generated resume to the user’s local system in .pdf or .docx format
+1. Enter job filters via a user-friendly Streamlit interface.
+2. Scrape LinkedIn to find jobs matching your filters.
+3. Upload your knowledge document (skills, experience, achievements).
+4. Use AI to tailor a resume specifically for the selected job.
+5. Save the resume locally in `.docx` or `.pdf` format.
 
-🛠️ Tech Stack
-Frontend: Streamlit
+---
 
-Backend/Processing: Python, OpenAI API (or other LLMs)
+## 🚀 Features
 
-Web Scraping: BeautifulSoup, Requests, Selenium (optional depending on implementation)
+- 🌐 Streamlit-based UI
+- 🔍 LinkedIn job scraping based on filters
+- 📄 Upload personal experience document
+- 🧠 AI-powered resume generation using job descriptions
+- 💾 Export resume to local file system
 
-File Generation: python-docx or ReportLab for PDF
+---
 
-🧰 Installation
-bash
-Copy
-Edit
-git clone https://github.com/yourusername/ai-resume-builder.git
-cd ai-resume-builder
-pip install -r requirements.txt
-Make sure to add your API keys (e.g. OpenAI) in a .env file:
+## 🛠 Tech Stack
 
-bash
-Copy
-Edit
-OPENAI_API_KEY=your_key_here
-📋 Usage
-Run the Streamlit App
+- **Frontend:** Streamlit
+- **Backend:** Python, OpenAI API (or any LLM)
+- **Scraping:** BeautifulSoup, Requests, (optional: Selenium)
+- **File Export:** `python-docx`, `fpdf`, or `reportlab`
 
-bash
-Copy
-Edit
-streamlit run app.py
-Provide Filters
+---
 
-Job title
+## 📂 Project Structure
 
-Location
-
-Experience level, etc.
-
-Upload Your Knowledge Document
-
-A .txt, .docx, or .pdf file containing all your relevant skills, experiences, projects, and achievements.
-
-Let the App Work
-
-The app scrapes LinkedIn for relevant job listings
-
-Select a job description
-
-AI compares the job description with your document
-
-A custom resume is generated and saved locally
-
-📂 Project Structure
-bash
-Copy
-Edit
+```
 ai-resume-builder/
 │
 ├── app.py                  # Main Streamlit application
 ├── scraper.py              # LinkedIn scraping logic
-├── resume_generator.py     # AI-based resume creation logic
-├── utils.py                # Helper functions
+├── resume_generator.py     # AI resume generation logic
+├── utils.py                # Utility functions
 ├── requirements.txt        # Python dependencies
 └── README.md               # Project documentation
-⚠️ Legal Note
-This project is intended for personal and educational use only. Scraping LinkedIn may violate their terms of service. Use at your own risk.
+```
 
-✨ Future Improvements
-Add authentication & resume history
+---
 
-Support for multiple job boards (Indeed, Glassdoor)
+## ⚙️ Installation
 
-Interactive resume editor
+1. **Clone the Repository**
 
-PDF/Docx template customization
+```bash
+git clone https://github.com/yourusername/ai-resume-builder.git
+cd ai-resume-builder
+```
 
-Integration with portfolio or GitHub for auto-updating content
+2. **Install Dependencies**
 
-🧑‍💻 Author
-Made with ❤️ by Jakir
+```bash
+pip install -r requirements.txt
+```
+
+3. **Set API Key**
+
+Create a `.env` file in the project root:
+
+```
+OPENAI_API_KEY=your_openai_api_key_here
+```
+
+Or directly set it in your environment variables.
+
+---
+
+## ▶️ Usage
+
+1. Run the application:
+
+```bash
+streamlit run app.py
+```
+
+2. Enter job filters (title, location, etc.)
+3. Upload your knowledge/experience document
+4. Select a job from the scraped LinkedIn results
+5. Let the AI generate a resume tailored to that job
+6. Download the resume to your device
+
+---
+
+## 📎 Example Knowledge Document
+
+Your knowledge document can include:
+
+```
+- Work Experience
+- Skills
+- Projects
+- Certifications
+- Tools/Technologies
+```
+
+It should be a `.txt`, `.docx`, or `.pdf` file with all relevant professional info.
+
+---
+
+## ⚠️ Legal Notice
+
+This project is for personal and educational purposes only.
+
+> **Note:** Scraping LinkedIn may violate their [Terms of Service](https://www.linkedin.com/legal/user-agreement). Use this tool responsibly.
+
+---
+
+## 🚧 Future Improvements
+
+- Support other job boards (Indeed, Glassdoor)
+- Resume design templates
+- Interactive resume editing
+- Auto-update via GitHub/portfolio links
+- Cloud storage integration
+
+---
+
+## 👤 Author
+
+Made with ❤️ by [Jakir Husain](https://github.com/JakirMugal?tab=repositories)
+
