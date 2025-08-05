@@ -46,7 +46,7 @@ if st.button("🚀 Start"):
         with st.spinner(f"📥 Collecting {number_of_jobs} jobs from LinkedIn..."):
             dict_of_folders = scrape_and_upload(base_path, url, number_of_jobs=number_of_jobs)
         st.success("✅ Job collection complete.")
-        st.markdown(f"Job HTML Folder Path : {dict_of_folders['html_path']}\nJson Folder Path: {dict_of_folders['json_apth']}")
+        st.markdown(f"Job HTML Folder Path : {dict_of_folders['html_path']}\nJson Folder Path: {dict_of_folders['json_path']}")
 
         with st.spinner("🔍 Processing job details..."):
             get_details_from_html(base_path)
