@@ -1,0 +1,58 @@
+﻿Jakir Husain Luhar – Compressed Professional Summary
+________________
+
+
+Contact Information
+* Email: jakirmugal7867@gmail.com
+* Phone: +91 8209391480
+* Location: Jaipur, India
+* LinkedIn: linkedin.com/in/thejakirhusain
+* GitHub: https://github.com/JakirMugal
+________________
+
+
+Education
+* B.Tech in Computer Science, Engineering College Bikaner (2017–2021) - 75%
+________________
+
+
+Technical Skills
+* Languages: Python (Advanced), SQL
+* Databases: PostgreSQL, Snowflake, MySQL, MongoDB
+* Libraries/Frameworks: Pandas, NumPy, Scikit-learn, OpenCV, Streamlit, SQLAlchemy
+* Machine Learning: EDA, Hypothesis Testing, Logistic/Polynomial Regression, Naive Bayes, SVM, Decision Trees, Random Forest, Recommender Systems
+* Deep Learning: ANN, CNN, RNN, GRU, LSTM, Seq2Seq, Attention, Transformers, Time Series, NLP
+* LLMs/GenAI: Prompt Engineering, LangChain, Hugging Face, Groq
+* Web Scraping/APIs: Selenium, Playwright, Beautiful Soup, Requests, Scrapy, Postman
+* BI Tools: Google Data Studio, Tableau, Power BI
+* Cloud/AutoML: Google Vertex AI, BigQuery
+* Customer Engagement: CleverTap, WebEngage
+________________
+
+
+Soft Skills
+* Leadership, Problem-Solving, Logical Thinking, Multitasking
+________________
+
+
+Work Experience
+Data Engineer – Alternative Path Pvt. Ltd., Gurgaon (Dec 2023 – Present)
+* Built ETL pipelines from APIs, HTML, S3, and emails
+* Loaded data into PostgreSQL & Snowflake using SQLAlchemy
+* Applied sentiment analysis, timestamp comparison, and NLP enrichment
+* Auto-generated HTML/email reports and integrated with S3
+* Created scraper to handle multiple API endpoints efficiently
+* Used ChatGPT for PDF summarization, image data extraction, transcript analysis
+* Automated reports with visual dashboards and email delivery
+Data Scientist – WitZeal Technology Pvt. Ltd., Gurgaon (Oct 2022 – Nov 2023)
+* Built retention engine using K-Means & bonus logic; improved 30-day retention by 15–22%
+* Developed fraud detection with behavioral pattern analysis
+* Built funnels in CleverTap to improve conversion by 2–3%
+* Created Churn Predictor (v1 & v2); reduced churn by 40%
+* Automated Power BI dashboards to save PMs time daily
+________________
+
+
+Projects
+* Diet Planner with AI: Streamlit app that creates custom diet plans using Groq
+* Resume Builder with AI: Generates resumes from job descriptions and experience
