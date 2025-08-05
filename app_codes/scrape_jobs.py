@@ -34,6 +34,7 @@ def scrape_and_upload(base_path, url,number_of_jobs=2):
         
     with open(meta_path,'w') as file:
         file.write(json.dumps(meta))
+    return {"html_path":html_path,"json_path":meta_path}
 # url = "https://www.linkedin.com/jobs/search?keywords=Data%20Scientist&location=India&geoId=102713980&f_E=3&f_TPR=&f_WT=2&position=1&pageNum=0"
 # base_path = r"E:\study\GitHub\RESUME-BUILDER-WITH-AI/test2"
 # scrape_and_upload(url=url,base_path=base_path)
