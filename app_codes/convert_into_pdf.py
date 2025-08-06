@@ -7,7 +7,7 @@ import base64
 from scrape_jobs import scrape_and_upload
 from get_job_details import get_details_from_html
 from create_job_description_summary import create_summary
-from create_html_by_ai import create_html_by_ai
+from create_resume_html import create_html_by_ai
 from convert_into_pdf import create_pdf_via_html
 
 
