@@ -3,9 +3,9 @@ from groq import Groq
 import os
 
 def create_html_by_ai(base_path,profile_name='profile',api_key=None):
-    job_description_summary = rf"{base_path}\job_description_summary.json"
-    personal_details = rf"{base_path}\{profile_name}.txt"
-    job_resume_html = rf"{base_path}\job_resume_html.json"
+    job_description_summary = os.path.join(base_path, "job_description_summary.json")
+    personal_details = os.path.join(base_path, f"{profile_name}.txt")
+    job_resume_html = os.path.join(base_path, "job_resume_html.json")
     with open(job_description_summary,"r") as file:
         jobs = json.loads(file.read())
     with open(personal_details, "r", encoding="utf-8") as file:

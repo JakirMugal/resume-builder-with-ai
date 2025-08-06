@@ -15,9 +15,9 @@ def get_details(text):
         'location':location
     }
 def get_details_from_html(base_path):
-    job_description_path = rf"{base_path}\job_description.json"
-    html_path = rf"{base_path}\job_data"
-    link_path_data = rf"{base_path}\link_path_data.json"
+    job_description_path = os.path.join(base_path, "job_description.json")
+    html_path = os.path.join(base_path, "job_data")
+    link_path_data = os.path.join(base_path, "link_path_data.json")
     with open(link_path_data,'r') as file:
         json_data = json.loads(file.read())
     meta={}

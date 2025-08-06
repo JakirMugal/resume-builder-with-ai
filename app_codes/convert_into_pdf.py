@@ -5,9 +5,10 @@ import pandas as pd
 import os
 
 def create_pdf_via_html(base_path):
-    resume_html_path = rf"{base_path}\job_resume_html.json"
-    resume_folder_path = rf"{base_path}\Resumes"
-    job_resume_combined_path = rf"{base_path}\job_resume_combined.csv"
+    
+    resume_html_path = os.path.join(base_path, "job_resume_html.json")
+    resume_folder_path = os.path.join(base_path, "Resumes")
+    job_resume_combined_path = os.path.join(base_path, "job_resume_combined.csv")
     os.makedirs(resume_folder_path, exist_ok=True)
     with open(resume_html_path,"r") as file:
         jobs = json.loads(file.read())

@@ -2,8 +2,9 @@ import json
 import os
 from groq import Groq
 def create_summary(base_path,api_key=None):
-    job_description = rf"{base_path}\job_description.json"
-    job_description_summary = rf"{base_path}\job_description_summary.json"
+
+    job_description = os.path.join(base_path, "job_description.json")
+    job_description_summary = os.path.join(base_path, "job_description_summary.json")
     client = Groq(api_key=api_key)
     user_prompt ="""
                 You are a professional resume and job-fit analyst.

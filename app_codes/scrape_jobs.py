@@ -8,8 +8,8 @@ def scrape_and_upload(base_path, url,number_of_jobs=2):
     response = Selector(text=response.text)
     urls = response.xpath('//a[contains(@class,"full-link")]/@href').getall()
     time.sleep(5)
-    html_path = rf"{base_path}\job_data"
-    meta_path = rf"{base_path}\link_path_data.json"
+    html_path = os.path.join(base_path, "job_data")
+    meta_path = os.path.join(base_path, "link_path_data.json")
 
     os.makedirs(html_path, exist_ok=True)
     meta={}
