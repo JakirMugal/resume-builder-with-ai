@@ -23,22 +23,24 @@ def get_details_from_html(base_path):
     meta={}
 
     for job_name,data in json_data.items():
-        print(f'Processing {job_name}')
-        if 'jobs/view' not in data['link']:
+        try:
+            if 'jobs/view' not in data['link']:
+                continue
+            file_path = os.path.join(html_path,data['path'])
+            with open(file_path, "r", encoding="utf-8") as file:
+                html_content = file.read()
+            selector = Selector(text = html_content)
+            job_description = '\n'.join(selector.xpath('//div[contains(@class,"description")]//text()').getall())
+            page_title = selector.xpath('//title/text()').get()
+            assert page_title and job_description , "Data not found"
+            meta[job_name] = {
+                'path':data['path'],
+                'link':data['link'],
+                'description':job_description,
+                **get_details(page_title)
+            }
+        except:
             continue
-        file_path = os.path.join(html_path,data['path'])
-        with open(file_path, "r", encoding="utf-8") as file:
-            html_content = file.read()
-        selector = Selector(text = html_content)
-        job_description = '\n'.join(selector.xpath('//div[contains(@class,"description")]//text()').getall())
-        page_title = selector.xpath('//title/text()').get()
-        assert page_title and job_description , "Data not found"
-        meta[job_name] = {
-            'path':data['path'],
-            'link':data['link'],
-            'description':job_description,
-            **get_details(page_title)
-        }
 
     with open(job_description_path,'w') as file:
         file.write(json.dumps(meta))
