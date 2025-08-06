@@ -1,106 +1,48 @@
-import os
+from xhtml2pdf import pisa
+from io import BytesIO
 import json
-import streamlit as st
-import shutil
-import base64
+import pandas as pd
+import os
 
-from scrape_jobs import scrape_and_upload
-from get_job_details import get_details_from_html
-from create_job_description_summary import create_summary
-from create_resume_html import create_html_by_ai
-from convert_into_pdf import create_pdf_via_html
-
-
-# ========== Helper Functions ==========
-
-def make_download_button(file_path, label):
-    """Creates a Streamlit download link for a file."""
-    with open(file_path, "rb") as f:
-        data = f.read()
-    b64 = base64.b64encode(data).decode()
-    href = f'<a href="data:file/zip;base64,{b64}" download="{os.path.basename(file_path)}">{label}</a>'
-    st.markdown(href, unsafe_allow_html=True)
-
-def prepare_downloads(base_path):
-    """Create zips for all data and for Resumes + CSV only."""
+def create_pdf_via_html(base_path):
+    
+    resume_html_path = os.path.join(base_path, "job_resume_html.json")
     resume_folder_path = os.path.join(base_path, "Resumes")
-    csv_path = os.path.join(base_path, "job_resume_combined.csv")
+    job_resume_combined_path = os.path.join(base_path, "job_resume_combined.csv")
+    os.makedirs(resume_folder_path, exist_ok=True)
+    with open(resume_html_path,"r") as file:
+        jobs = json.loads(file.read())
+    meta=[]
+    for job,data in jobs.items():
+        print(f"Processing Job: {job}")
+        filename = job.replace(".html",".pdf")
+        
+        full_path = os.path.join(resume_folder_path, filename)
+        meta.append(
+            {
+                'Company':data['company'],
+                'Location':data['location'],
+                'Position':data['position'],
+                'Link':data['link'],
+                "Resume Path":full_path
+            }
+        )
+        if os.path.exists(full_path):
+            print(f"{filename} already present.....")
+            continue
+        reply = data['resume_html']
+        pdf_buffer = BytesIO()
+        pisa.CreatePDF(reply, dest=pdf_buffer)
+        pdf_buffer.seek(0)
 
-    # ZIP for All Data
-    all_data_zip = os.path.join(base_path, "All_Data.zip")
-    shutil.make_archive(all_data_zip.replace(".zip", ""), 'zip', base_path)
+        # Save to file
+        with open(full_path, "wb") as f:
+            f.write(pdf_buffer.getbuffer())
 
-    # ZIP for Resumes + CSV
-    resume_zip = os.path.join(base_path, "Resumes_and_CSV.zip")
-    temp_dir = os.path.join(base_path, "temp_download")
-    os.makedirs(temp_dir, exist_ok=True)
-
-    if os.path.exists(resume_folder_path):
-        shutil.copytree(resume_folder_path, os.path.join(temp_dir, "Resumes"))
-    if os.path.exists(csv_path):
-        shutil.copy(csv_path, os.path.join(temp_dir, "job_resume_combined.csv"))
-
-    shutil.make_archive(resume_zip.replace(".zip", ""), 'zip', temp_dir)
-    shutil.rmtree(temp_dir)
-
-    return all_data_zip, resume_zip
+        print(f"PDF saved as {filename}")
 
 
-# ========== Streamlit App ==========
+    df=pd.DataFrame(meta)
+    df.to_csv(job_resume_combined_path,index=False)
 
-st.title("Create Customized Resume with AI using LinkedIn")
-st.write("📌 Please paste a LinkedIn filtered jobs URL and upload your profile text file.")
 
-# Default values
-default_url = "https://www.linkedin.com/jobs/search?keywords=Data%20Scientist&location=India&geoId=102713980&f_E=3&f_TPR=&f_WT=2&position=1&pageNum=0"
-default_folder = "data"
-
-# Inputs
-url = st.text_input("LinkedIn Jobs URL", value=default_url)
-num_jobs = st.number_input("Number of Jobs to Scrape", min_value=1, max_value=50, value=2, step=1)
-uploaded_file = st.file_uploader("Upload your profile (.txt)", type=["txt"])
-profile_name = "profile"
-
-# Ensure base path exists
-base_path = os.path.join(os.getcwd(), default_folder)
-os.makedirs(base_path, exist_ok=True)
-
-if uploaded_file is not None:
-    profile_path = os.path.join(base_path, f"{profile_name}.txt")
-    with open(profile_path, "wb") as f:
-        f.write(uploaded_file.getbuffer())
-    st.success(f"✅ Profile file saved at: {profile_path}")
-
-if st.button("🚀 Start Resume Creation"):
-    # Check profile exists
-    profile_path = os.path.join(base_path, f"{profile_name}.txt")
-    if not os.path.exists(profile_path):
-        st.error(f"❌ Profile file not found at {profile_path}. Please upload it above.")
-        st.stop()
-
-    with st.spinner("🔍 Gathering Job Data..."):
-        scrape_and_upload(base_path, url, number_of_jobs=num_jobs)
-    st.success("✅ Job data gathering complete.")
-
-    with st.spinner("📄 Extracting Job Details..."):
-        get_details_from_html(base_path)
-    st.success("✅ Job details extraction done.")
-
-    with st.spinner("📝 Summarizing Job Descriptions..."):
-        create_summary(base_path)
-    st.success("✅ Job description summaries created.")
-
-    with st.spinner("🎨 Creating HTML Resumes via AI..."):
-        create_html_by_ai(base_path, profile_name=profile_name)
-    st.success("✅ HTML resumes created.")
-
-    with st.spinner("📄 Converting HTML to PDF..."):
-        create_pdf_via_html(base_path)
-    st.success("✅ PDF resumes generated.")
-
-    # Prepare download zips
-    all_data_zip, resume_zip = prepare_downloads(base_path)
-
-    st.subheader("📥 Download Your Files")
-    make_download_button(all_data_zip, "⬇️ Download All Data (ZIP)")
-    make_download_button(resume_zip, "⬇️ Download Resumes + CSV (ZIP)")
