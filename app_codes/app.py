@@ -46,7 +46,7 @@ if uploaded_file is not None:
         profile_path = os.path.join(base_path, f"{profile_name}.txt")
         with open(profile_path, "w", encoding="utf-8") as f:
             f.write(content)
-        st.success("✅ Profile file uploaded successfully and saved as 'profile.txt'")
+        st.success(f"✅ Profile file uploaded successfully and saved as 'profile.txt' on {profile_path}")
     except Exception as e:
         st.error(f"❌ Error reading uploaded file: {e}")
 
