@@ -7,14 +7,14 @@ from create_job_description_summary import create_summary
 from create_resume_html import create_html_by_ai
 from convert_into_pdf import create_pdf_via_html
 
-# Default values
+# Default LinkedIn jobs URL
 default_url = "https://www.linkedin.com/jobs/search?keywords=Data%20Scientist&location=India&geoId=102713980&f_E=3&f_TPR=&f_WT=2&position=1&pageNum=0"
 
-# Page config
+# Streamlit page setup
 st.set_page_config(page_title="Create Customized Resume with AI & LinkedIn", layout="centered")
 st.title("📝 Create Customized Resume with AI & LinkedIn")
 
-# Instructions for non-technical users
+# Instructions
 st.markdown("""
 Paste a LinkedIn filtered jobs URL and let the app automatically collect jobs, process details, summarize descriptions, 
 and generate customized resumes for each job posting.  
@@ -32,27 +32,28 @@ and generate customized resumes for each job posting.
 url = st.text_input("🔗 LinkedIn filtered URL:", value=default_url)
 number_of_jobs = st.number_input("📊 Number of jobs to collect:", min_value=1, value=2, step=1)
 
-# Fixed base_path
+# Fixed base path
 base_path = os.path.join(os.getcwd(), "data")
 os.makedirs(base_path, exist_ok=True)
 
-# Upload profile file
+# Upload profile.txt
 uploaded_file = st.file_uploader("📤 Upload your profile .txt file", type=["txt"])
-profile_name = None
+profile_name = "profile"  # fixed name used by create_html_by_ai
+
 if uploaded_file is not None:
     try:
         content = uploaded_file.read().decode("utf-8")
-        profile_name = os.path.splitext(uploaded_file.name)[0]  # filename without extension
-        profile_path = os.path.join(base_path, uploaded_file.name)
+        profile_path = os.path.join(base_path, f"{profile_name}.txt")
         with open(profile_path, "w", encoding="utf-8") as f:
             f.write(content)
-        st.success(f"✅ Profile file '{uploaded_file.name}' uploaded successfully!")
+        st.success("✅ Profile file uploaded successfully and saved as 'profile.txt'")
     except Exception as e:
         st.error(f"❌ Error reading uploaded file: {e}")
 
 # Run pipeline
 if st.button("🚀 Start"):
-    if not profile_name:
+    profile_path = os.path.join(base_path, f"{profile_name}.txt")
+    if not os.path.exists(profile_path):
         st.error("❌ Please upload your profile `.txt` file before starting.")
     else:
         steps = [
@@ -69,7 +70,7 @@ if st.button("🚀 Start"):
                     step_func()
                 st.success(f"✅ {step_msg.replace('...', '')} Done.")
 
-            # Show folder path
+            # Show full folder path
             full_path = os.path.abspath(base_path)
             st.success(f"📂 All files saved in: `{full_path}`")
 
@@ -84,7 +85,5 @@ if st.button("🚀 Start"):
                     mime="application/zip"
                 )
 
-        except FileNotFoundError:
-            st.error(f"❌ Profile file not found.\nPlease put your `.txt` file in this location: `{base_path}`")
         except Exception as e:
             st.error(f"❌ Error: {e}")
