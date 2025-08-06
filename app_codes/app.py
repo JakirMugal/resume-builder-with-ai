@@ -9,7 +9,6 @@ from convert_into_pdf import create_pdf_via_html
 
 # Default values
 default_url = "https://www.linkedin.com/jobs/search?keywords=Data%20Scientist&location=India&geoId=102713980&f_E=3&f_TPR=&f_WT=2&position=1&pageNum=0"
-default_profile_name = "profile"
 
 # Page config
 st.set_page_config(page_title="Create Customized Resume with AI & LinkedIn", layout="centered")
@@ -22,7 +21,7 @@ and generate customized resumes for each job posting.
 
 **Steps:**
 1. Paste your LinkedIn search URL with filters applied.  
-2. Enter your profile `.txt` filename (without extension) stored in the app folder.  
+2. Upload your profile `.txt` file (contains your resume details).  
 3. Set the number of jobs to collect.  
 4. Click **Start** and wait for the process to complete.  
 
@@ -32,43 +31,60 @@ and generate customized resumes for each job posting.
 # Inputs
 url = st.text_input("🔗 LinkedIn filtered URL:", value=default_url)
 number_of_jobs = st.number_input("📊 Number of jobs to collect:", min_value=1, value=2, step=1)
-profile_name = st.text_input("👤 Profile text file name (without .txt):", value=default_profile_name)
 
 # Fixed base_path
 base_path = os.path.join(os.getcwd(), "data")
 os.makedirs(base_path, exist_ok=True)
 
+# Upload profile file
+uploaded_file = st.file_uploader("📤 Upload your profile .txt file", type=["txt"])
+profile_name = None
+if uploaded_file is not None:
+    try:
+        content = uploaded_file.read().decode("utf-8")
+        profile_name = os.path.splitext(uploaded_file.name)[0]  # filename without extension
+        profile_path = os.path.join(base_path, uploaded_file.name)
+        with open(profile_path, "w", encoding="utf-8") as f:
+            f.write(content)
+        st.success(f"✅ Profile file '{uploaded_file.name}' uploaded successfully!")
+    except Exception as e:
+        st.error(f"❌ Error reading uploaded file: {e}")
+
 # Run pipeline
 if st.button("🚀 Start"):
-    steps = [
-        (f"📥 Collecting {number_of_jobs} jobs from LinkedIn...", lambda: scrape_and_upload(base_path, url, number_of_jobs=number_of_jobs)),
-        ("🔍 Processing job details...", lambda: get_details_from_html(base_path)),
-        ("📝 Summarizing job descriptions...", lambda: create_summary(base_path)),
-        ("🎨 Creating resumes...", lambda: create_html_by_ai(base_path, profile_name=profile_name)),
-        ("📄 Converting resumes to PDF and CSV...", lambda: create_pdf_via_html(base_path)),
-    ]
+    if not profile_name:
+        st.error("❌ Please upload your profile `.txt` file before starting.")
+    else:
+        steps = [
+            (f"📥 Collecting {number_of_jobs} jobs from LinkedIn...", lambda: scrape_and_upload(base_path, url, number_of_jobs=number_of_jobs)),
+            ("🔍 Processing job details...", lambda: get_details_from_html(base_path)),
+            ("📝 Summarizing job descriptions...", lambda: create_summary(base_path)),
+            ("🎨 Creating resumes...", lambda: create_html_by_ai(base_path, profile_name=profile_name)),
+            ("📄 Converting resumes to PDF and CSV...", lambda: create_pdf_via_html(base_path)),
+        ]
 
-    try:
-        for step_msg, step_func in steps:
-            with st.spinner(step_msg):
-                step_func()
-            st.success(f"✅ {step_msg.replace('...', '')} Done.")
+        try:
+            for step_msg, step_func in steps:
+                with st.spinner(step_msg):
+                    step_func()
+                st.success(f"✅ {step_msg.replace('...', '')} Done.")
 
-        # Show folder path
-        st.success(f"📂 All files saved in: `{base_path}`")
+            # Show folder path
+            full_path = os.path.abspath(base_path)
+            st.success(f"📂 All files saved in: `{full_path}`")
 
-        # Create and offer ZIP download
-        zip_path = f"{base_path}.zip"
-        shutil.make_archive(base_path, 'zip', base_path)
-        with open(zip_path, "rb") as zip_file:
-            st.download_button(
-                label="⬇️ Download All Files as ZIP",
-                data=zip_file,
-                file_name="data.zip",
-                mime="application/zip"
-            )
+            # Create and offer ZIP download
+            zip_path = f"{full_path}.zip"
+            shutil.make_archive(full_path, 'zip', full_path)
+            with open(zip_path, "rb") as zip_file:
+                st.download_button(
+                    label="⬇️ Download All Files as ZIP",
+                    data=zip_file,
+                    file_name="data.zip",
+                    mime="application/zip"
+                )
 
-    except FileNotFoundError:
-        st.error(f"❌ Profile file not found.\nPlease put your `.txt` file in this location: `{base_path}`")
-    except Exception as e:
-        st.error(f"❌ Error: {e}")
+        except FileNotFoundError:
+            st.error(f"❌ Profile file not found.\nPlease put your `.txt` file in this location: `{base_path}`")
+        except Exception as e:
+            st.error(f"❌ Error: {e}")
