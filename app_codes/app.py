@@ -1,11 +1,11 @@
 import streamlit as st
 import os
 import shutil
-from create_html_by_ai import create_htmls
-from create_resume_html import generate_resume
-from create_job_description_summary import create_job_description_summary
-from get_job_details import get_job_details
-from scrape_job import scrape_and_upload
+from scrape_jobs import scrape_and_upload
+from get_job_details import get_details_from_html
+from create_job_description_summary import create_summary
+from create_resume_html import create_html_by_ai
+from convert_into_pdf import create_pdf_via_html
 from zipfile import ZipFile
 from pathlib import Path
 import tempfile
@@ -54,22 +54,22 @@ if st.button("🚀 Process"):
 
         # Step 4: Extract job details
         st.info("📄 Extracting job details...")
-        get_job_details(base_path)
+        get_details_from_html(base_path)
         st.success("✅ Job details extracted.")
 
         # Step 5: Create summaries
         st.info("🧠 Creating job description summaries...")
-        create_job_description_summary(base_path)
+        create_summary(base_path)
         st.success("✅ Job description summaries done.")
 
         # Step 6: Create HTMLs using AI
         st.info("🤖 Generating HTML resumes using AI...")
-        create_htmls(base_path, num_resumes)
+        create_html_by_ai(base_path, num_resumes)
         st.success("✅ HTML generation done.")
 
         # Step 7: Convert HTML to PDF resumes
         st.info("📝 Creating final resume PDFs...")
-        generate_resume(base_path)
+        create_pdf_via_html(base_path)
         st.success("✅ Resume creation complete!")
 
         st.success("🎉 All tasks completed! You can now download your data.")
